@@ -165,6 +165,8 @@ def sinpi(x):
 py"sinpi"(1)
 ```
 
+You can also execute a whole script `"foo.py"` via `@pyinclude("foo.py")` as if you had pasted it into a `py"""..."""` string.
+
 When creating a Julia module, it is a useful pattern to define Python
 functions or classes in Julia's `__init__` and then use it in Julia
 function with `py"..."`.
@@ -197,7 +199,7 @@ cannot be accessed outside `MyModule`.
 
 Here are solutions to some common problems:
 
-* By default, PyCall [doesn't include the current directory in the Python search path](https://github.com/JuliaPy/PyCall.jl/issues/48).   If you want to do that (in order to load a Python module from the current directory), just run `pushfirst!(PyVector(pyimport("sys")."path"), "")`.
+* By default, PyCall [doesn't include the current directory in the Python search path](https://github.com/JuliaPy/PyCall.jl/issues/48).   If you want to do that (in order to load a Python module from the current directory), just run `pushfirst!(pyimport("sys")."path", "")`.
 
 ## Python object interfaces
 
@@ -389,6 +391,11 @@ and also by providing more type information to the Julia compiler.
   with other Python code.  Note that Python functions _must_ be defined in
   `__init__`.  Side-effect in Python occurred at top-level Julia scope
   cannot be used at run-time for precompiled modules.
+
+  You can also execute a Python script file `"foo.py"` by running `@pyinclude("foo.py")`, and it will be as if you had pasted the
+  script into a `py"..."` string.  (`@pyinclude` does not support
+  interpolating Julia variables with `$var`, however — the script
+  must be pure Python.)
 
 * `pybuiltin(s)`: Look up `s` (a string or symbol) among the global Python
   builtins.  If `s` is a string it returns a `PyObject`, while if `s` is a
